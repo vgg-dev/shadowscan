@@ -1,0 +1,26 @@
+﻿name: Bug report
+description: Report a problem with ShadowScan
+title: "bug: "
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: Include expected vs actual behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: CLI command(s) and minimal example. Do not include API keys.
+    validations:
+      required: true
+  - type: textarea
+    id: env
+    attributes:
+      label: Environment
+      description: OS, Python version, and ShadowScan version/commit.
+    validations:
+      required: true

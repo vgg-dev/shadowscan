@@ -1,0 +1,19 @@
+﻿[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "shadowscan"
+version = "0.1.0"
+description = "ShadowScan: passive Shodan Host API lookup with Nmap-style output"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {file = "LICENSE"}
+authors = [{name = "VGG-DEV"}]
+keywords = ["shodan", "osint", "security", "recon", "nmap"]
+
+[project.scripts]
+shadowscan = "shadowscan:main"
+
+[tool.setuptools]
+py-modules = ["shadowscan", "shodan_host"]

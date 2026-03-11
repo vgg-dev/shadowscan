@@ -1,0 +1,19 @@
+﻿name: Feature request
+description: Suggest an improvement to ShadowScan
+title: "feat: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: What would you like to add/change?
+    validations:
+      required: true
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: Why is this useful?
+    validations:
+      required: true
