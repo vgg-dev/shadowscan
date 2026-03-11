@@ -1,14 +1,14 @@
 ﻿[CmdletBinding(SupportsShouldProcess=$true)]
 param(
   [Parameter(Mandatory=$false)]
-  [string]$RepoName = "shodan-host-cli",
+  [string]\$RepoName = "shadowscan",
 
   [Parameter(Mandatory=$false)]
   [ValidateSet('private','public')]
   [string]$Visibility = "private",
 
   [Parameter(Mandatory=$false)]
-  [string]$Description = "Tiny CLI that queries Shodan Host API and prints Nmap-style output.",
+  [string]$Description = "ShadowScan: tiny CLI that queries Shodan Host API and prints Nmap-style output.",
 
   # If set, creates the repo under the org instead of your user.
   [Parameter(Mandatory=$false)]
@@ -92,3 +92,4 @@ Write-Host "(If prompted, authenticate via your GitHub credential manager/browse
 if ($PSCmdlet.ShouldProcess("git", "Push to $remoteUrl")) {
   git push -u $RemoteName $branch
 }
+
