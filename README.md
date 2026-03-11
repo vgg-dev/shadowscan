@@ -134,3 +134,16 @@ python .\shadowscan.py 8.8.8.8 --cache-ttl 86400      # 24h TTL
 ## License
 
 No license specified yet.
+
+## CI/CD
+
+- CI runs on every push/PR via GitHub Actions.
+- Releases: push a tag like `v0.1.0` to build `dist/*` and create a GitHub Release.
+- Optional PyPI publish: set repo secret `PYPI_API_TOKEN` to enable publishing.
+
+Tag example:
+
+```powershell
+git tag v0.1.0
+git push origin v0.1.0
+```
