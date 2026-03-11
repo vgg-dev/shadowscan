@@ -14,6 +14,10 @@ param(
   [Parameter(Mandatory=$false)]
   [string]$Org,
 
+  # Optional GitHub token; if omitted, uses env vars GITHUB_TOKEN, GH_TOKEN, or GITHUB_PAT.
+  [Parameter(Mandatory=$false)]
+  [string]$Token,
+
   [Parameter(Mandatory=$false)]
   [string]$RemoteName = "origin"
 )
@@ -32,16 +36,19 @@ function Get-GitBranch {
   return $b.Trim()
 }
 
-function Require-Env([string]$Name) {
-  $v = [Environment]::GetEnvironmentVariable($Name)
-  if (-not $v) { throw "Missing env var $Name. Set it to a GitHub token with repo permissions." }
-  return $v
+function Get-Token {
+  param([string]$ExplicitToken)
+  if ($ExplicitToken) { return $ExplicitToken }
+  if ($env:GITHUB_TOKEN) { return $env:GITHUB_TOKEN }
+  if ($env:GH_TOKEN) { return $env:GH_TOKEN }
+  if ($env:GITHUB_PAT) { return $env:GITHUB_PAT }
+  throw "Missing GitHub token. Set `$env:GITHUB_TOKEN (or `$env:GH_TOKEN) to a token with repo permissions, or pass -Token."
 }
 
 Require-Command git
 
-$token = Require-Env "GITHUB_TOKEN"
-$headers = @{ Authorization = "Bearer $token"; Accept = "application/vnd.github+json" }
+$tokenValue = Get-Token -ExplicitToken $Token
+$headers = @{ Authorization = "Bearer $tokenValue"; Accept = "application/vnd.github+json" }
 
 # Determine owner
 if ($Org) {
@@ -65,7 +72,6 @@ if ($PSCmdlet.ShouldProcess("GitHub", "Create repo $owner/$RepoName")) {
     $repo = Invoke-RestMethod -Method Post -Uri $createUri -Headers $headers -Body $body
     Write-Host "Created: $($repo.html_url)"
   } catch {
-    # If it already exists, this will fail; still allow push if remote is configured.
     Write-Warning ("Create failed: " + $_.Exception.Message)
   }
 }
@@ -92,5 +98,3 @@ Write-Host "(If prompted, authenticate via your GitHub credential manager/browse
 if ($PSCmdlet.ShouldProcess("git", "Push to $remoteUrl")) {
   git push -u $RemoteName $branch
 }
-
-
