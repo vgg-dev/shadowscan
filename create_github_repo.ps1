@@ -1,7 +1,7 @@
 ﻿[CmdletBinding(SupportsShouldProcess=$true)]
 param(
   [Parameter(Mandatory=$false)]
-  [string]\$RepoName = "shadowscan",
+  [string]$RepoName = "shadowscan",
 
   [Parameter(Mandatory=$false)]
   [ValidateSet('private','public')]
@@ -92,4 +92,5 @@ Write-Host "(If prompted, authenticate via your GitHub credential manager/browse
 if ($PSCmdlet.ShouldProcess("git", "Push to $remoteUrl")) {
   git push -u $RemoteName $branch
 }
+
 
