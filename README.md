@@ -63,6 +63,24 @@ Requirements:
 - Python 3.9+
 - A Shodan API key in `SHODAN_API_KEY`
 
+
+Install options:
+
+```powershell
+# Install the latest release (recommended)
+pipx install "git+https://github.com/vgg-dev/shadowscan.git@v0.1.0"
+
+# Or install from main
+pipx install "git+https://github.com/vgg-dev/shadowscan.git@main"
+```
+
+Run as:
+
+```powershell
+shadowscan --help
+shadowscan 8.8.8.8
+```
+
 Optional (virtual environment):
 
 ```powershell
@@ -166,3 +184,4 @@ git push origin v0.1.0
 ## 📄 License
 
 MIT — see `LICENSE`.
+
