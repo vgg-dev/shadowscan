@@ -1,38 +1,51 @@
-﻿# ShadowScan
+﻿<p align="center">
+  <img src="assets/logo.svg" alt="ShadowScan" width="720" />
+</p>
 
-ShadowScan is a small CLI that queries the Shodan Host API for one or more hosts and prints Nmap-style output.
+<p align="center">
+  <a href="https://github.com/vgg-dev/shadowscan/releases">
+    <img alt="release" src="https://img.shields.io/github/v/release/vgg-dev/shadowscan?sort=semver" />
+  </a>
+  <a href="LICENSE">
+    <img alt="license" src="https://img.shields.io/github/license/vgg-dev/shadowscan" />
+  </a>
+  <a href="https://github.com/vgg-dev/shadowscan/actions/workflows/ci.yml">
+    <img alt="ci" src="https://github.com/vgg-dev/shadowscan/actions/workflows/ci.yml/badge.svg" />
+  </a>
+  <a href="https://github.com/vgg-dev/shadowscan/actions/workflows/release.yml">
+    <img alt="release workflow" src="https://github.com/vgg-dev/shadowscan/actions/workflows/release.yml/badge.svg" />
+  </a>
+  <img alt="python" src="https://img.shields.io/badge/python-3.9%2B-blue" />
+  <a href="https://github.com/vgg-dev/shadowscan/releases">
+    <img alt="downloads" src="https://img.shields.io/github/downloads/vgg-dev/shadowscan/total" />
+  </a>
+  <a href="https://github.com/vgg-dev/shadowscan/commits/main">
+    <img alt="last commit" src="https://img.shields.io/github/last-commit/vgg-dev/shadowscan" />
+  </a>
+</p>
 
-- Passive lookup only (no scanning)
-- Multi-target input: positional targets, `--input`, and `--cidr`
-- Filters: `--ports`, `--proto`, `--service`, `--grep`
-- Output: `--format nmap|summary|json|ndjson|grep|xml` plus `-oN/-oG/-oX`
-- Caching: `--cache-dir`, `--cache-ttl`, `--no-cache`
+ShadowScan is a small CLI that queries the Shodan Host API for one or more hosts and prints **Nmap-style** output.
 
-## Install
+> [!IMPORTANT]
+> Use ShadowScan only on hosts you are authorized to assess.
+>
+> ShadowScan is a **passive lookup tool** (it does not probe/scan targets). Output reflects what Shodan has indexed.
 
-Requirements:
+## ✨ Features
 
-- Python 3.9+ (recommended)
-- A Shodan API key in `SHODAN_API_KEY`
+- 🕵️ Passive Shodan Host API lookup (no scanning)
+- 🎯 Multi-target input: positional targets, `--input`, and `--cidr`
+- 🧰 Filters: `--ports`, `--proto`, `--service`, `--grep`
+- 🧾 Output: `--format nmap|summary|json|ndjson|grep|xml` plus `-oN/-oG/-oX`
+- 💾 Caching: `--cache-dir`, `--cache-ttl`, `--no-cache`
+- 🧯 Safety rails: `--authorized-scope`, `--dry-run`, `--max-targets`
 
-Optional (virtual environment):
+## ⚡ Quickstart
 
 ```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-```
-
-## Setup
-
-Set your API key (current PowerShell session):
-
-```powershell
+# API key (current session)
 $env:SHODAN_API_KEY = "YOUR_KEY"
-```
 
-## Quickstart
-
-```powershell
 # Single target
 python .\shadowscan.py 8.8.8.8
 
@@ -43,22 +56,21 @@ python .\shadowscan.py --input targets.txt
 python .\shadowscan.py --cidr 10.0.0.0/24 --authorized-scope scope.txt
 ```
 
-## What this tool does
+## 📦 Install
 
-- ShadowScan performs a *passive* lookup via Shodan's Host API.
-- ShadowScan does **not** probe/scan the target like Nmap does.
-- If Shodan has no recent data for a host, the output may be incomplete.
+Requirements:
 
-## Safety
+- Python 3.9+
+- A Shodan API key in `SHODAN_API_KEY`
 
-To help avoid accidental lookups outside an authorized scope:
+Optional (virtual environment):
 
-- `--authorized-scope scope.txt` blocks targets not in the allowlist (CIDRs/IPs; `#` comments supported)
-- `--dry-run` prints the resolved targets and exits (no API calls)
-- `--max-targets` limits `--cidr` expansion unless `--allow-large` is set
-- `--force` overrides allowlist blocking (use with care)
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
 
-## Usage
+## 🧪 Examples
 
 Single target (default Nmap-style):
 
@@ -75,23 +87,36 @@ python .\shadowscan.py --cidr 10.0.0.0/24
 python .\shadowscan.py 1.1.1.1 8.8.8.8
 ```
 
-## Filtering
+Filters + banners:
 
 ```powershell
-# Only show specific ports
-python .\shadowscan.py 8.8.8.8 --ports 22,80,443
-
-# Only show TCP services
-python .\shadowscan.py 8.8.8.8 --proto tcp
-
-# Only show selected SERVICE values
-python .\shadowscan.py 8.8.8.8 --service http,https,ssh
-
-# Regex filter across service/version/banner (useful with --show-banners)
+python .\shadowscan.py 8.8.8.8 --ports 80,443 --show-banners
 python .\shadowscan.py 8.8.8.8 --grep "nginx" --show-banners
 ```
 
-## Output
+Raw JSON / pipelines:
+
+```powershell
+python .\shadowscan.py 8.8.8.8 --format json
+python .\shadowscan.py --input targets.txt --format ndjson
+```
+
+Write Nmap-ish output files:
+
+```powershell
+python .\shadowscan.py --input targets.txt -oN out.txt -oG out.grep -oX out.xml
+```
+
+## 🧷 Safety
+
+To help avoid accidental lookups outside an authorized scope:
+
+- `--authorized-scope scope.txt` blocks targets not in the allowlist (CIDRs/IPs; `#` comments supported)
+- `--dry-run` prints the resolved targets and exits (no API calls)
+- `--max-targets` limits `--cidr` expansion unless `--allow-large` is set
+- `--force` overrides allowlist blocking (use with care)
+
+## 🗂️ Output
 
 Primary stdout formats:
 
@@ -104,13 +129,7 @@ python .\shadowscan.py 8.8.8.8 --format grep
 python .\shadowscan.py 8.8.8.8 --format xml
 ```
 
-Write Nmap-ish output files:
-
-```powershell
-python .\shadowscan.py --input targets.txt -oN out.txt -oG out.grep -oX out.xml
-```
-
-## Caching
+## 💾 Caching
 
 By default, responses are cached to `.shadowscan-cache/` for 1 hour.
 
@@ -120,22 +139,18 @@ python .\shadowscan.py 8.8.8.8 --no-cache             # disable cache reads/writ
 python .\shadowscan.py 8.8.8.8 --cache-ttl 86400      # 24h TTL
 ```
 
-## Troubleshooting
+## 🛠️ Troubleshooting
 
 - **401/403**: verify `SHODAN_API_KEY` is set and has access to the Host API.
 - **429** (rate limit): use `--retries`/`--backoff` and reduce target count.
 - **Name resolution errors**: use an IP directly, or check DNS; `--resolve` is only for hostnames.
 
-## Security notes
+## 🔐 Security notes
 
 - Do not commit API keys.
 - Raw JSON output can contain service banners; treat it as potentially sensitive.
 
-## License
-
-No license specified yet.
-
-## CI/CD
+## 🚀 CI/CD
 
 - CI runs on every push/PR via GitHub Actions.
 - Releases: push a tag like `v0.1.0` to build `dist/*` and create a GitHub Release.
@@ -147,3 +162,7 @@ Tag example:
 git tag v0.1.0
 git push origin v0.1.0
 ```
+
+## 📄 License
+
+MIT — see `LICENSE`.
